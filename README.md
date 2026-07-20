@@ -57,5 +57,3 @@ review_criteria: [レビュー時の評価観点のリスト]
 
 * FastAPI / SQLAlchemy / SQLite / Jinja2
 * LLM: Amazon Bedrock または OpenAI API（`.env` の `LLM_PROVIDER` で切り替え）
-
-設計の詳細・判断理由は [docs/DESIGN.md](./docs/DESIGN.md) を参照してください。
