@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# uv / venv
+.venv/
+
+# Environment variables (secrets)
+.env
+
+# SQLite database
+app/db/*.db
+app/db/*.sqlite3
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
