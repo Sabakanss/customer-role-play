@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提案レビュー | AI顧客ヒアリング演習</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body data-customer-role="{{ customer_role }}">
+  <header>
+    <h1>提案レビュー</h1>
+    <nav><a href="/chat">ヒアリング画面へ戻る</a></nav>
+  </header>
+
+  <main>
+    <p class="lead">ヒアリング内容をもとにまとめた改善提案を提出し、{{ customer_role }}からのレビューを受けてください。</p>
+
+    <form id="review-form">
+      <textarea id="review-input" rows="6" placeholder="改善提案を入力してください" required></textarea>
+      <button type="submit">提案を提出する</button>
+    </form>
+
+    <div id="review-log">
+      {% for r in reviews %}
+      <div class="review-entry">
+        <div class="proposal">
+          <span class="role-label">提案</span>
+          <p>{{ r.proposal }}</p>
+        </div>
+        <div class="result">
+          <span class="role-label">{{ customer_role }}からのレビュー</span>
+          <p>{{ r.result }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', path='/js/review.js') }}"></script>
+</body>
+</html>

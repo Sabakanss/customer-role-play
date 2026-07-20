@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI顧客ヒアリング演習</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body data-customer-role="{{ customer_role }}">
+  <header>
+    <h1>AI顧客ヒアリング演習</h1>
+    <nav><a href="/review">提案レビューへ進む</a></nav>
+  </header>
+
+  <main>
+    <p class="lead">AI顧客（{{ customer_role }}）にヒアリングを行い、課題を整理してください。</p>
+
+    <div id="chat-log">
+      {% for m in history %}
+      <div class="message {{ m.role }}">
+        <span class="role-label">{{ customer_role if m.role == "assistant" else "あなた" }}</span>
+        <p>{{ m.content }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <form id="chat-form">
+      <input type="text" id="chat-input" placeholder="質問を入力してください" autocomplete="off" required>
+      <button type="submit">送信</button>
+    </form>
+  </main>
+
+  <script src="{{ url_for('static', path='/js/chat.js') }}"></script>
+</body>
+</html>
