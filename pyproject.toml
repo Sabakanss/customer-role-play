@@ -1,0 +1,23 @@
+[project]
+name = "customer-role-play"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.43.51",
+    "fastapi>=0.139.2",
+    "jinja2>=3.1.6",
+    "openai>=2.46.0",
+    "pydantic-settings>=2.14.2",
+    "python-dotenv>=1.2.2",
+    "python-multipart>=0.0.32",
+    "pyyaml>=6.0.3",
+    "sqlalchemy>=2.0.51",
+    "uvicorn[standard]>=0.51.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
