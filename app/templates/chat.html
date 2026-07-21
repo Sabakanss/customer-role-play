@@ -9,7 +9,13 @@
 <body data-customer-role="{{ customer_role }}">
   <header>
     <h1>AI顧客ヒアリング演習</h1>
-    <nav><a href="/review">提案レビューへ進む</a></nav>
+    <nav>
+      <a href="/sessions">過去の会話一覧</a>
+      <a href="/review">提案レビューへ進む</a>
+      <form id="new-chat-form" action="/chat/new" method="post">
+        <button type="submit">新しい会話を始める</button>
+      </form>
+    </nav>
   </header>
 
   <main>

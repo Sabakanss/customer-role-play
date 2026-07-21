@@ -18,9 +18,25 @@ header {
   margin-bottom: 8px;
 }
 
+header nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 header nav a {
   color: #06c;
   text-decoration: none;
+}
+
+header nav button {
+  color: #06c;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .lead {
@@ -161,4 +177,54 @@ button:hover {
 
 .review-entry .result p {
   background: #eee;
+}
+
+#session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.session-entry {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-entry.active {
+  border-color: #06c;
+}
+
+.session-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #666;
+}
+
+.session-current {
+  color: #06c;
+  font-weight: bold;
+}
+
+.session-preview {
+  margin: 0;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-entry button {
+  align-self: flex-start;
+}
+
+.session-entry button:disabled {
+  background: #ccc;
+  cursor: default;
 }

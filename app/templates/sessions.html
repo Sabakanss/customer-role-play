@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>過去の会話一覧 | AI顧客ヒアリング演習</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>過去の会話一覧</h1>
+    <nav><a href="/chat">ヒアリング画面へ戻る</a></nav>
+  </header>
+
+  <main>
+    <p class="lead">これまでの会話を選んで、続きから再開できます。</p>
+
+    <div id="session-list">
+      {% for s in sessions %}
+      <div class="session-entry {{ 'active' if s.id == current_session_id else '' }}">
+        <div class="session-meta">
+          <span class="session-date">{{ s.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+          <span class="session-count">{{ s.message_count }}件の発言</span>
+          {% if s.id == current_session_id %}<span class="session-current">現在の会話</span>{% endif %}
+        </div>
+        <p class="session-preview">{{ s.preview }}</p>
+        <form method="post" action="/chat/switch/{{ s.id }}">
+          <button type="submit" {{ 'disabled' if s.id == current_session_id else '' }}>
+            {{ 'この会話を表示中' if s.id == current_session_id else 'この会話を開く' }}
+          </button>
+        </form>
+      </div>
+      {% else %}
+      <p>まだ会話履歴がありません。</p>
+      {% endfor %}
+    </div>
+  </main>
+</body>
+</html>

@@ -57,6 +57,18 @@ def chat_page(
     return response
 
 
+@app.get("/sessions", response_class=HTMLResponse)
+def sessions_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    session_id: str | None = Cookie(default=None, alias=SESSION_COOKIE_NAME),
+) -> HTMLResponse:
+    sessions = chat_service.list_sessions_summary(db)
+    return templates.TemplateResponse(
+        request, "sessions.html", {"sessions": sessions, "current_session_id": session_id}
+    )
+
+
 @app.get("/review", response_class=HTMLResponse, response_model=None)
 def review_page(
     request: Request,

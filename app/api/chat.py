@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Cookie, Depends, HTTPException
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -34,3 +35,23 @@ def post_chat(
 
     reply = chat_service.send_message(db, session_id, body.message)
     return ChatResponse(reply=reply)
+
+
+@router.post("/chat/new")
+def post_chat_new(db: Session = Depends(get_db)) -> RedirectResponse:
+    """新しい会話セッションを開始する。既存の履歴はDBに残したまま、Cookieを新しいセッションIDに切り替える。"""
+    new_session_id, _ = chat_service.start_session(db)
+    response = RedirectResponse(url="/chat", status_code=303)
+    response.set_cookie(SESSION_COOKIE_NAME, new_session_id, httponly=True, samesite="lax")
+    return response
+
+
+@router.post("/chat/switch/{session_id}")
+def post_chat_switch(session_id: str, db: Session = Depends(get_db)) -> RedirectResponse:
+    """既存の過去セッションにCookieを切り替え、その続きから会話できるようにする。"""
+    if session_repository.get_session(db, session_id) is None:
+        raise HTTPException(status_code=404, detail="指定した会話が見つかりません。")
+
+    response = RedirectResponse(url="/chat", status_code=303)
+    response.set_cookie(SESSION_COOKIE_NAME, session_id, httponly=True, samesite="lax")
+    return response

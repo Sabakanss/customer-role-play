@@ -35,3 +35,20 @@ def send_message(db: DBSession, session_id: str, user_message: str) -> str:
 def get_history(db: DBSession, session_id: str) -> list[dict[str, str]]:
     messages = message_repository.get_messages(db, session_id)
     return [{"role": m.role, "content": m.content} for m in messages]
+
+
+def list_sessions_summary(db: DBSession) -> list[dict]:
+    """全セッションを新しい順に、件数・最終発言のプレビュー付きで返す。"""
+    sessions = session_repository.list_sessions(db)
+    summaries = []
+    for s in sessions:
+        last_message = message_repository.get_last_message(db, s.id)
+        summaries.append(
+            {
+                "id": s.id,
+                "created_at": s.created_at,
+                "message_count": message_repository.count_messages(db, s.id),
+                "preview": last_message.content if last_message else "",
+            }
+        )
+    return summaries
