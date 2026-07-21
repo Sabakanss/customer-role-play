@@ -17,6 +17,10 @@ app/db/*.sqlite3
 # Personal learning docs (not for GitHub)
 docs/
 
+# Confidential intern-training scenario (not for GitHub)
+app/scenarios/warehouse_process.yaml
+data/warehouse_process/
+
 # Editor / OS
 .vscode/
 .idea/
