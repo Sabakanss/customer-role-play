@@ -1,0 +1,29 @@
+version: 1.0
+runtime: python312
+build:
+  commands:
+    build:
+      - pip install --upgrade pip
+      - pip install uv
+      - uv sync --frozen --no-dev
+run:
+  command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+  network:
+    port: 8000
+  env:
+    - name: LLM_PROVIDER
+      value: "bedrock"
+    - name: BEDROCK_REGION
+      value: "us-east-1"
+    - name: BEDROCK_MODEL_ID
+      value: "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+    - name: DATABASE_URL
+      value: "sqlite:///./app/db/app.db"
+    - name: SECURE_COOKIES
+      value: "true"
+    - name: COGNITO_REGION
+      value: "us-east-1"
+  # 以下は機密情報のためこのファイルに書かない。App Runnerコンソールの
+  # 「環境変数」または「シークレット(Secrets Manager参照)」で追加設定する:
+  #   APP_BASE_URL, SESSION_SECRET_KEY,
+  #   COGNITO_USER_POOL_ID, COGNITO_CLIENT_ID, COGNITO_CLIENT_SECRET, COGNITO_DOMAIN

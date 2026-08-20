@@ -56,4 +56,5 @@ review_criteria: [レビュー時の評価観点のリスト]
 ## 技術構成
 
 * FastAPI / SQLAlchemy / SQLite / Jinja2
+* 認証: Amazon Cognito（Hosted UI経由のOIDC）
 * LLM: Amazon Bedrock または OpenAI API（`.env` の `LLM_PROVIDER` で切り替え）

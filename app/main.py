@@ -5,9 +5,11 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.api import chat, review
-from app.config import SESSION_COOKIE_NAME
+from app.auth.routes import router as auth_router
+from app.config import SESSION_COOKIE_NAME, settings
 from app.models.database import get_db, init_db
 from app.repositories import review_repository, session_repository
 from app.services import chat_service
@@ -23,8 +25,17 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="AI顧客ヒアリング演習アプリ", lifespan=lifespan)
 templates = Jinja2Templates(directory="app/templates")
 
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.session_secret_key,
+    same_site="lax",
+    https_only=settings.secure_cookies,
+    max_age=60 * 60 * 8,
+)
+
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+app.include_router(auth_router)
 app.include_router(chat.router)
 app.include_router(review.router)
 
@@ -39,12 +50,14 @@ def root() -> RedirectResponse:
     return RedirectResponse(url="/chat")
 
 
-@app.get("/chat", response_class=HTMLResponse)
+@app.get("/chat", response_class=HTMLResponse, response_model=None)
 def chat_page(
     request: Request,
     db: Session = Depends(get_db),
     session_id: str | None = Cookie(default=None, alias=SESSION_COOKIE_NAME),
-) -> HTMLResponse:
+):
+    if not request.session.get("user"):
+        return RedirectResponse(url="/auth/login?next=/chat")
     if not session_id or session_repository.get_session(db, session_id) is None:
         session_id, _ = chat_service.start_session(db)
 
@@ -57,12 +70,14 @@ def chat_page(
     return response
 
 
-@app.get("/sessions", response_class=HTMLResponse)
+@app.get("/sessions", response_class=HTMLResponse, response_model=None)
 def sessions_page(
     request: Request,
     db: Session = Depends(get_db),
     session_id: str | None = Cookie(default=None, alias=SESSION_COOKIE_NAME),
-) -> HTMLResponse:
+):
+    if not request.session.get("user"):
+        return RedirectResponse(url="/auth/login?next=/sessions")
     sessions = chat_service.list_sessions_summary(db)
     return templates.TemplateResponse(
         request, "sessions.html", {"sessions": sessions, "current_session_id": session_id}
@@ -75,6 +90,8 @@ def review_page(
     db: Session = Depends(get_db),
     session_id: str | None = Cookie(default=None, alias=SESSION_COOKIE_NAME),
 ):
+    if not request.session.get("user"):
+        return RedirectResponse(url="/auth/login?next=/review")
     if not session_id or session_repository.get_session(db, session_id) is None:
         return RedirectResponse(url="/chat")
 

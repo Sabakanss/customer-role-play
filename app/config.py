@@ -20,6 +20,22 @@ class Settings(BaseSettings):
     # DB
     database_url: str = "sqlite:///./app/db/app.db"
 
+    # アプリの公開URL（末尾スラッシュなし）。Cognitoのコールバック/サインアウトURL登録時にも使う
+    app_base_url: str = "http://127.0.0.1:8000"
+
+    # Cookie署名用の秘密鍵。本番では十分ランダムな文字列を環境変数で設定すること
+    session_secret_key: str = "dev-insecure-secret-change-me"
+    # 本番(https)ではTrue固定。ローカル(http)開発時のみ.envでFalseにする
+    secure_cookies: bool = True
+
+    # Amazon Cognito（ユーザー認証）
+    cognito_region: str = "us-east-1"
+    cognito_user_pool_id: str = ""
+    cognito_client_id: str = ""
+    cognito_client_secret: str = ""
+    # 例: https://your-app.auth.us-east-1.amazoncognito.com
+    cognito_domain: str = ""
+
 
 settings = Settings()
 

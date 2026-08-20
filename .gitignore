@@ -21,6 +21,9 @@ docs/
 app/scenarios/warehouse_process.yaml
 data/warehouse_process/
 
+# Internal deployment runbook (not for GitHub)
+DEPLOY.md
+
 # Editor / OS
 .vscode/
 .idea/

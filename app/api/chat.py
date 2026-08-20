@@ -3,12 +3,13 @@ from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.auth.dependencies import get_current_user
 from app.config import SESSION_COOKIE_NAME
 from app.models.database import get_db
 from app.repositories import session_repository
 from app.services import chat_service
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 class ChatRequest(BaseModel):
